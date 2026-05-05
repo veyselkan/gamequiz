@@ -2,12 +2,155 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  background-color: #0f0f1a;
-  color: #f1f1f1;
+@layer base {
+  body {
+    margin: 0;
+    background-color: #08080f;
+    color: #f1f1f1;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #08080f; }
+  ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
 }
 
-#root {
-  min-height: 100vh;
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #c084fc, #818cf8, #e879f9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-purple {
+    text-shadow: 0 0 40px rgba(168, 85, 247, 0.7);
+  }
+
+  .card-neon {
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .card-neon:hover {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.15), 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 25px rgba(147, 51, 234, 0.5);
+  }
+
+  .shake {
+    animation: shake 0.45s ease-in-out;
+  }
+  .pop {
+    animation: pop 0.25s ease-out;
+  }
+}
+
+/* Keyframes */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-18px) rotate(3deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dance {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  20% { transform: translateY(-14px) rotate(-12deg) scale(1.12); }
+  40% { transform: translateY(-5px) rotate(6deg) scale(1.05); }
+  60% { transform: translateY(-18px) rotate(10deg) scale(1.15); }
+  80% { transform: translateY(-4px) rotate(-5deg) scale(1.03); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes particleRise {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8% { opacity: 0.5; }
+  92% { opacity: 0.5; }
+  100% { transform: translateY(-110vh) rotate(540deg); opacity: 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.3); }
+  50% { box-shadow: 0 0 22px rgba(168, 85, 247, 0.65), 0 0 40px rgba(168, 85, 247, 0.2); }
+}
+
+@keyframes orb {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  33% { transform: scale(1.08) translate(10px, -10px); }
+  66% { transform: scale(0.95) translate(-8px, 8px); }
+}
+
+@keyframes correctFlash {
+  0% { background-color: rgb(21 128 61); }
+  60% { background-color: rgb(22 163 74); box-shadow: 0 0 18px rgba(74, 222, 128, 0.5); }
+  100% { background-color: rgb(21 128 61); }
+}
+
+@keyframes wrongFlash {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes rainbowBg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Named animation classes */
+.animate-float      { animation: float 3.8s ease-in-out infinite; }
+.animate-dance      { animation: dance 0.7s ease-in-out infinite; }
+.animate-fade-in-up { animation: fadeInUp 0.55s ease-out both; }
+.animate-slide-down { animation: slideDown 0.35s ease-out both; }
+.animate-pulse-glow { animation: pulseGlow 2.2s ease-in-out infinite; }
+.animate-orb        { animation: orb 8s ease-in-out infinite; }
+.animate-toast      { animation: toastIn 0.3s ease-out both; }
+.animate-particle   { animation: particleRise linear infinite; }
+.animate-correct    { animation: correctFlash 0.6s ease-in-out; }
+.animate-wrong      { animation: wrongFlash 0.45s ease-in-out; }
+
+.animate-rainbow {
+  background: linear-gradient(270deg, #c084fc, #818cf8, #38bdf8, #34d399, #fbbf24, #f87171, #c084fc);
+  background-size: 400% 400%;
+  animation: rainbowBg 4s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
