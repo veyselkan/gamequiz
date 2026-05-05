@@ -72,6 +72,11 @@ export default function Quiz() {
     const q = questions[current];
     const isCorrect = answer !== null && String(answer) === String(q.correct);
 
+    if (answer === null) {
+      setPhase('eliminated');
+      return;
+    }
+
     // Pixel Quiz: yanlış cevapta görüntüyü netleştir, aynı soruda kal (maks 3 hak)
     if (mode === '2' && !isCorrect && answer !== null) {
       const newWrong = wrongAttempts + 1;
@@ -120,9 +125,9 @@ export default function Quiz() {
     return () => clearTimeout(t);
   }, [pixelLevel, phase, mode]);
 
-  // Save score when finished
+  // Save score when finished or eliminated
   useEffect(() => {
-    if (phase !== 'finished' || !user) return;
+    if ((phase !== 'finished' && phase !== 'eliminated') || !user) return;
     api.post('/scores', {
       mode: Number(mode),
       score,
@@ -151,6 +156,55 @@ export default function Quiz() {
           {(mode === '4' || mode === '5') && (
             <p className="text-gray-500 text-sm mt-2">Bu mod biraz uzun sürebilir</p>
           )}
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === 'eliminated') {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="bg-gray-900 border border-red-700 rounded-2xl p-10 max-w-md w-full text-center">
+          <div className="text-6xl mb-4">⏰</div>
+          <h1 className="text-3xl font-bold text-red-400 mb-2">Süre Bitti!</h1>
+          <p className="text-gray-400 mb-6">Zamanında cevap veremedin — elendin.</p>
+
+          <div className="bg-gray-800 rounded-xl p-6 mb-6 space-y-3">
+            <div className="flex justify-between text-lg">
+              <span className="text-gray-400">Toplam Puan</span>
+              <span className="text-purple-400 font-bold">{score}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Doğru Cevap</span>
+              <span className="text-green-400 font-semibold">{correctCount} / {questions.length}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Ulaşılan Soru</span>
+              <span className="text-yellow-400 font-semibold">{current + 1}. soru</span>
+            </div>
+          </div>
+
+          {!user && (
+            <p className="text-gray-500 text-sm mb-4">
+              Skorunu kaydetmek için{' '}
+              <Link to="/login" className="text-purple-400 hover:underline">giriş yap</Link>
+            </p>
+          )}
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors"
+            >
+              Tekrar Dene
+            </button>
+            <Link
+              to="/leaderboard"
+              className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition-colors text-center"
+            >
+              Leaderboard
+            </Link>
+          </div>
         </div>
       </div>
     );
