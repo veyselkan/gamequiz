@@ -21,6 +21,8 @@ const OPTION_STYLES = [
   { letter: 'B', gradient: 'from-blue-500 to-blue-700',     glow: 'shadow-blue-500/40' },
   { letter: 'C', gradient: 'from-pink-500 to-pink-700',     glow: 'shadow-pink-500/40' },
   { letter: 'D', gradient: 'from-orange-500 to-orange-700', glow: 'shadow-orange-500/40' },
+  { letter: 'E', gradient: 'from-green-500 to-green-700',   glow: 'shadow-green-500/40' },
+  { letter: 'F', gradient: 'from-red-500 to-red-700',       glow: 'shadow-red-500/40' },
 ];
 
 const LOADING_MSGS = [

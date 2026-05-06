@@ -85,7 +85,7 @@ router.get('/2', async (req, res) => {
       type: 'pixel',
       image: g.background_image,
       correct: g.name,
-      options: shuffle([g.name, ...pickWrong(games, g.name, 'name')]),
+      options: shuffle([g.name, ...pickWrong(games, g.name, 'name', 5)]),
     }));
     res.json(questions);
   } catch (err) {
