@@ -54,6 +54,7 @@ export default function ListQuiz() {
   const [input, setInput] = useState('');
   const [phase, setPhase] = useState('loading');
   const [flash, setFlash] = useState(null);
+  const [lastSeries, setLastSeries] = useState(null);
   const [score, setScore] = useState(0);
   const [error, setError] = useState('');
 
@@ -87,30 +88,45 @@ export default function ListQuiz() {
     const guess = input.trim();
     if (!guess || phase !== 'playing') return;
 
-    const dup = Object.values(filled).some(a => normalize(a.name) === normalize(guess));
-    if (dup) {
-      setFlash('duplicate');
-      setTimeout(() => setFlash(null), 1100);
-      setInput('');
-      return;
-    }
+    // Tüm eşleşen dolu olmayan oyunları bul (seri desteği)
+    const matches = challenge.answers.filter(a => isMatch(guess, a.name) && !filled[a.rank]);
 
-    const match = challenge.answers.find(a => isMatch(guess, a.name) && !filled[a.rank]);
-    if (match) {
-      setFilled({ ...filled, [match.rank]: match });
+    if (matches.length === 0) {
+      const alreadyFilled = challenge.answers.some(a => isMatch(guess, a.name));
+      if (alreadyFilled) {
+        setFlash('duplicate');
+        setTimeout(() => setFlash(null), 1100);
+      } else {
+        const newLives = lives - 1;
+        setLives(newLives);
+        setFlash('wrong');
+        vibrate([60, 40, 60]);
+        setTimeout(() => setFlash(null), 900);
+        if (newLives <= 0) setTimeout(() => setPhase('lost'), 800);
+      }
+    } else if (matches.length === 1) {
+      setFilled(prev => ({ ...prev, [matches[0].rank]: matches[0] }));
       setScore(s => s + 100 + lives * 20);
       setFlash('correct');
       fireConfetti();
       vibrate(30);
       setTimeout(() => setFlash(null), 900);
     } else {
-      const newLives = lives - 1;
-      setLives(newLives);
-      setFlash('wrong');
-      vibrate([60, 40, 60]);
-      setTimeout(() => setFlash(null), 900);
-      if (newLives <= 0) setTimeout(() => setPhase('lost'), 800);
+      // Seri eşleşme — aynı anda birden fazla oyun bulundu
+      const points = matches.length * (100 + lives * 20);
+      setFilled(prev => {
+        const next = { ...prev };
+        matches.forEach(m => { next[m.rank] = m; });
+        return next;
+      });
+      setScore(s => s + points);
+      setLastSeries({ count: matches.length, points });
+      setFlash('series');
+      fireConfetti(Math.min(matches.length, 4));
+      vibrate([30, 20, 30, 20, 30]);
+      setTimeout(() => setFlash(null), 1400);
     }
+
     setInput('');
     inputRef.current?.focus();
   };
@@ -233,11 +249,13 @@ export default function ListQuiz() {
               exit={{ y: 8, opacity: 0 }}
               className={`text-center text-sm font-bold mb-3 ${
                 flash === 'correct' ? 'text-green-400'
+                : flash === 'series' ? 'text-purple-300'
                 : flash === 'wrong' ? 'text-red-400'
                 : 'text-yellow-400'
               }`}
             >
               {flash === 'correct' && `✅ Doğru! +${100 + lives * 20} puan`}
+              {flash === 'series' && lastSeries && `🎯 Seri! ${lastSeries.count} oyun bulundu! +${lastSeries.points} puan`}
               {flash === 'wrong' && '❌ Yanlış! -1 can'}
               {flash === 'duplicate' && '⚠️ Zaten buldun!'}
             </motion.div>
@@ -257,7 +275,7 @@ export default function ListQuiz() {
               autoFocus
               className={`flex-1 bg-white/5 border-2 rounded-2xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none transition-all ${
                 flash === 'wrong' ? 'border-red-500/60 shake'
-                : flash === 'correct' ? 'border-green-500/60'
+                : flash === 'correct' || flash === 'series' ? 'border-green-500/60'
                 : 'border-white/10 focus:border-purple-500/60'
               }`}
             />
