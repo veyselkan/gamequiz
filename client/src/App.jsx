@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import RatingPrompt from './components/RatingPrompt';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/recommend" element={<Recommend />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
+        <RatingPrompt />
       </BrowserRouter>
     </AuthProvider>
   );

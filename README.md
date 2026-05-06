@@ -4,11 +4,9 @@ Video oyunu bilgini test et! RAWG API tabanlı, çok modlu full-stack quiz uygul
 
 ## 🌐 Canlı Demo
 
-> **NOT:** Aşağıdaki URL'leri kendi deploy adreslerinizle değiştirin.
+🚀 **[https://gamequiz-five.vercel.app](https://gamequiz-five.vercel.app)**
 
-- **Frontend (Vercel):** `https://gamequiz-client.vercel.app`
-- **Backend (Render):** `https://gamequiz-api.onrender.com`
-- **API Health Check:** `https://gamequiz-api.onrender.com/api/health`
+Frontend Vercel üzerinde, backend Render üzerinde host ediliyor. Veritabanı MongoDB Atlas.
 
 ## 🧱 Mimari
 
