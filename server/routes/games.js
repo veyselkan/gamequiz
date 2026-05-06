@@ -61,8 +61,10 @@ router.get("/trivia", async (req, res) => {
     const { data: detail } = await axios.get(`${BASE}/games/${game.id}`, { params: { key: KEY } });
 
     const rawText = detail.description_raw || stripHtml(detail.description || '');
-    const fact = firstSentence(rawText) ||
-      `${game.name} oyunu ${year} yılında piyasaya çıktı ve Metacritic'te ${game.metacritic}/100 puan aldı.`;
+    const sentence = firstSentence(rawText);
+    const fact = sentence && sentence.length > 20
+      ? sentence
+      : `${game.name} oyunu ${year} yılında piyasaya çıktı ve Metacritic'te ${game.metacritic}/100 puan aldı.`;
 
     res.json({
       name: game.name,
