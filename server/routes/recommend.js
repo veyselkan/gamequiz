@@ -47,19 +47,27 @@ router.get('/', async (req, res) => {
   if (cached) return res.json(cached);
 
   try {
-    // 1. Oyunu ara
-    let searchRes = await axios.get(`${BASE}/games`, {
-      params: { key: KEY, search: gameName, page_size: 5, search_precise: true },
-    });
-    let found = searchRes.data.results[0];
-
-    if (!found) {
-      searchRes = await axios.get(`${BASE}/games`, {
-        params: { key: KEY, search: gameName, page_size: 5 },
+    // 1. Oyunu ara — en popüleri seç (metacritic öncelikli, sonra ratings_count)
+    const pickMostPopular = (results) =>
+      results.reduce((best, g) => {
+        const score = (g) => (g.metacritic || 0) * 1000 + (g.ratings_count || 0);
+        return score(g) > score(best) ? g : best;
       });
-      found = searchRes.data.results[0];
+
+    let searchRes = await axios.get(`${BASE}/games`, {
+      params: { key: KEY, search: gameName, page_size: 10, search_precise: true },
+    });
+    let results = searchRes.data.results;
+
+    if (!results.length) {
+      searchRes = await axios.get(`${BASE}/games`, {
+        params: { key: KEY, search: gameName, page_size: 10 },
+      });
+      results = searchRes.data.results;
     }
-    if (!found) return res.status(404).json({ error: 'Oyun bulunamadı' });
+    if (!results.length) return res.status(404).json({ error: 'Oyun bulunamadı' });
+
+    const found = pickMostPopular(results);
 
     // 2. Detay çek
     const detailRes = await axios.get(`${BASE}/games/${found.id}`, { params: { key: KEY } });
