@@ -163,7 +163,7 @@ export default function ListQuiz() {
       <div className="max-w-lg mx-auto">
 
         {/* Header — sticky so it stays visible below the navbar while scrolling */}
-        <div className="sticky top-14 z-40 -mx-4 px-4 py-3 mb-5 flex items-center justify-between bg-[#08080f] border-b border-white/[0.04]">
+        <div className="sticky top-14 z-40 -mx-4 px-4 py-3 mb-5 flex items-center justify-between bg-transparent">
           <Link to="/quiz" className="text-gray-400 hover:text-white text-sm font-medium transition-colors">← Çık</Link>
           <div className="text-right">
             <div className="text-purple-400 font-black text-xl tabular-nums">

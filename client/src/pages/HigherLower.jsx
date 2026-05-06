@@ -261,7 +261,7 @@ export default function HigherLower() {
     <div className="min-h-screen px-4 py-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <div className="sticky top-14 z-40 -mx-4 px-4 py-3 mb-4 flex items-center justify-between bg-[#08080f] border-b border-white/[0.04]">
+        <div className="sticky top-14 z-40 -mx-4 px-4 py-3 mb-4 flex items-center justify-between bg-transparent">
           <Link to="/quiz" className="text-gray-600 hover:text-gray-300 text-sm">← Çık</Link>
           <span className="text-gray-400 font-medium text-sm">⭐ Higher or Lower</span>
           <div className="text-right">

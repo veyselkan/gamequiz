@@ -33,11 +33,18 @@ const saveScore = async (req, res) => {
 const getLeaderboard = async (req, res) => {
   try {
     const { mode } = req.query;
-    const filter = mode ? { mode: Number(mode) } : {};
-    const scores = await Score.find(filter)
-      .sort({ score: -1 })
-      .limit(20)
-      .select('username mode modeName score correctAnswers totalQuestions createdAt');
+    const matchStage = mode ? { mode: Number(mode) } : {};
+
+    // Her kullanıcının en yüksek skoru — aynı kişi bir kez görünür
+    const scores = await Score.aggregate([
+      { $match: matchStage },
+      { $sort: { score: -1 } },
+      { $group: { _id: '$username', doc: { $first: '$$ROOT' } } },
+      { $replaceRoot: { newRoot: '$doc' } },
+      { $sort: { score: -1 } },
+      { $limit: 20 },
+    ]);
+
     res.json(scores);
   } catch (err) {
     res.status(500).json({ error: err.message });
