@@ -35,11 +35,12 @@ const getLeaderboard = async (req, res) => {
     const { mode } = req.query;
     const matchStage = mode ? { mode: Number(mode) } : {};
 
-    // Her kullanıcının en yüksek skoru — aynı kişi bir kez görünür
+    // Her kullanıcı her mod için bir kez görünür (en yüksek skoru)
+    const groupKey = mode ? '$username' : { username: '$username', mode: '$mode' };
     const scores = await Score.aggregate([
       { $match: matchStage },
       { $sort: { score: -1 } },
-      { $group: { _id: '$username', doc: { $first: '$$ROOT' } } },
+      { $group: { _id: groupKey, doc: { $first: '$$ROOT' } } },
       { $replaceRoot: { newRoot: '$doc' } },
       { $sort: { score: -1 } },
       { $limit: 20 },

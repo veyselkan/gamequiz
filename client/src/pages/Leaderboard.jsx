@@ -3,12 +3,12 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
 const MODES = [
-  { id: '', label: 'Tümü' },
   { id: '1', label: 'Adını Bil' },
   { id: '2', label: 'Pixel Quiz' },
   { id: '3', label: 'Puan Tahmini' },
   { id: '4', label: 'Açıklama Quiz' },
   { id: '5', label: 'Geliştirici Kim?' },
+  { id: '6', label: 'Liste Doldur' },
 ];
 
 const RANK_STYLES = [
@@ -21,7 +21,7 @@ export default function Leaderboard() {
   const { user } = useAuth();
   const [scores, setScores] = useState([]);
   const [myScores, setMyScores] = useState([]);
-  const [selectedMode, setSelectedMode] = useState('');
+  const [selectedMode, setSelectedMode] = useState('1');
   const [tab, setTab] = useState('global');
   const [loading, setLoading] = useState(true);
 
