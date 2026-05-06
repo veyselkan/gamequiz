@@ -644,7 +644,7 @@ export default function Quiz() {
 
       <div className="max-w-2xl mx-auto">
         {/* Top bar: exit | timer + streak | score */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="sticky top-14 z-40 -mx-4 px-4 py-3 mb-4 flex items-center justify-between bg-[#08080f] border-b border-white/[0.04]">
           <Link to="/quiz" className="text-gray-600 hover:text-gray-300 text-sm transition-colors">← Çık</Link>
           <div className="flex items-center gap-3">
             <CircularTimer timeLeft={timeLeft} />
