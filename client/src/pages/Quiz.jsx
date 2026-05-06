@@ -288,7 +288,10 @@ export default function Quiz() {
   useEffect(() => {
     const controller = new AbortController();
     api.get(`/quiz/${mode}`, { signal: controller.signal })
-      .then(({ data }) => { setQuestions(data); setPhase('question'); })
+      .then(({ data }) => {
+        if (!data || data.length === 0) { setError('Soru oluşturulamadı, lütfen tekrar dene.'); return; }
+        setQuestions(data); setPhase('question');
+      })
       .catch(() => setError('Sorular yüklenemedi, lütfen tekrar dene.'));
     return () => controller.abort();
   }, [mode]);
@@ -315,6 +318,7 @@ export default function Quiz() {
     if (phase !== 'question') return;
 
     const q = questions[current];
+    if (!q) return;
     const isCorrect = answer !== null && String(answer) === String(q.correct);
     const answerSec = questionStartRef.current
       ? (Date.now() - questionStartRef.current) / 1000

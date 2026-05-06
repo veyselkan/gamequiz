@@ -6,6 +6,7 @@ const MODE_NAMES = {
   3: 'Puan Tahmini',
   4: 'Açıklama Quiz',
   5: 'Geliştirici Kim?',
+  6: 'Liste Doldur',
 };
 
 const saveScore = async (req, res) => {
