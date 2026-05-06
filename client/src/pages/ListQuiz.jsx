@@ -162,9 +162,9 @@ export default function ListQuiz() {
     <div className="min-h-screen px-4 py-6">
       <div className="max-w-lg mx-auto">
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <Link to="/quiz" className="text-gray-600 hover:text-gray-300 text-sm">← Çık</Link>
+        {/* Header — sticky so it stays visible below the navbar while scrolling */}
+        <div className="sticky top-14 z-40 -mx-4 px-4 py-3 mb-5 flex items-center justify-between backdrop-blur-md bg-black/60 border-b border-white/5">
+          <Link to="/quiz" className="text-gray-400 hover:text-white text-sm font-medium transition-colors">← Çık</Link>
           <div className="text-right">
             <div className="text-purple-400 font-black text-xl tabular-nums">
               <CountUp to={score} duration={500} />
