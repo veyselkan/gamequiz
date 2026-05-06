@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import TriviaBalloon from '../components/TriviaBalloon';
 
 const MODES = [
   { id: 1, title: 'Adını Bil',       icon: '🖼️', desc: 'Oyun kapağına bakarak adını tahmin et',
@@ -46,6 +47,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen px-6 py-12 relative overflow-hidden">
+      <TriviaBalloon />
       {/* Background ambiance */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         {particles.map(p => (
