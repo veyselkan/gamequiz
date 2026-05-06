@@ -85,52 +85,73 @@ export default function TriviaBalloon() {
         )}
       </AnimatePresence>
 
-      {/* Trivia card */}
+      {/* Trivia modal */}
       <AnimatePresence>
         {showCard && (
           <motion.div
-            key="card"
-            className="fixed bottom-8 right-6 z-40 w-72"
-            initial={{ scale: 0.5, opacity: 0, y: 40 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-            transition={{ type: 'spring', stiffness: 320, damping: 26, delay: 0.15 }}
+            key="overlay"
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="glass border border-purple-500/30 rounded-2xl p-5 shadow-xl shadow-purple-500/20">
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
+
+            {/* Card */}
+            <motion.div
+              key="card"
+              className="relative glass border border-purple-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-purple-500/20"
+              initial={{ scale: 0.6, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 26, delay: 0.1 }}
+            >
               {trivia ? (
                 <>
-                  <div className="flex gap-3">
-                    <span className="text-2xl flex-shrink-0">🎮</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[9px] text-purple-400 font-black uppercase tracking-widest mb-1">
-                        Oyun Tarihi Bilgisi
-                      </p>
-                      <h3 className="text-white font-black text-sm leading-tight">
-                        {trivia.name}
-                        {trivia.year && (
-                          <span className="text-gray-500 font-normal text-xs ml-1">({trivia.year})</span>
-                        )}
-                      </h3>
-                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        {trivia.metacritic && (
-                          <span className="text-yellow-400 text-xs">⭐ {trivia.metacritic}/100</span>
-                        )}
-                        {trivia.genre && (
-                          <span className="text-gray-600 text-xs">{trivia.genre}</span>
-                        )}
-                      </div>
-                      <p className="text-gray-300 text-xs leading-relaxed mt-2 italic">
-                        "{trivia.fact}"
-                      </p>
-                    </div>
+                  <div className="text-center mb-5">
+                    <motion.span
+                      className="text-5xl inline-block"
+                      animate={{ rotate: [-6, 6, -6] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                      🎈
+                    </motion.span>
+                  </div>
+
+                  <p className="text-[10px] text-purple-400 font-black uppercase tracking-widest text-center mb-3">
+                    Oyun Tarihi Bilgisi
+                  </p>
+
+                  <h2 className="text-white font-black text-2xl text-center leading-tight mb-1">
+                    {trivia.name}
+                  </h2>
+
+                  <div className="flex items-center justify-center gap-4 mb-5 flex-wrap">
+                    {trivia.year && (
+                      <span className="text-gray-500 text-sm">📅 {trivia.year}</span>
+                    )}
+                    {trivia.metacritic && (
+                      <span className="text-yellow-400 text-sm font-bold">⭐ {trivia.metacritic}/100</span>
+                    )}
+                    {trivia.genre && (
+                      <span className="text-gray-500 text-sm">🎮 {trivia.genre}</span>
+                    )}
+                  </div>
+
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 mb-5">
+                    <p className="text-gray-200 text-sm leading-relaxed text-center italic">
+                      "{trivia.fact}"
+                    </p>
                   </div>
                 </>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col items-center gap-4 py-6">
                   <motion.span
-                    className="text-2xl"
+                    className="text-4xl"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
                   >
                     ⏳
                   </motion.span>
@@ -139,7 +160,7 @@ export default function TriviaBalloon() {
               )}
 
               {/* Countdown bar */}
-              <div className="mt-3 h-0.5 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
                   initial={{ width: '100%' }}
@@ -147,7 +168,8 @@ export default function TriviaBalloon() {
                   transition={{ duration: 10, ease: 'linear' }}
                 />
               </div>
-            </div>
+              <p className="text-gray-700 text-xs text-center mt-2">10 saniye sonra kaybolur</p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
