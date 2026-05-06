@@ -38,6 +38,17 @@ export default function Leaderboard() {
     api.get('/scores/me').then(({ data }) => setMyScores(data));
   }, [user]);
 
+  const handleDelete = async (id) => {
+    if (!confirm('Bu skoru silmek istediğine emin misin?')) return;
+    try {
+      await api.delete(`/scores/${id}`);
+      setMyScores(prev => prev.filter(s => s._id !== id));
+      setScores(prev => prev.filter(s => s._id !== id));
+    } catch {
+      alert('Skor silinemedi.');
+    }
+  };
+
   return (
     <div className="min-h-screen px-4 py-12 relative overflow-hidden">
       <div
@@ -155,10 +166,10 @@ export default function Leaderboard() {
               myScores.map((s, i) => (
                 <div
                   key={s._id}
-                  className="flex items-center gap-4 glass border border-white/[0.07] hover:border-purple-500/30 rounded-2xl px-5 py-4 transition-all animate-fade-in-up"
+                  className="flex items-center gap-4 glass border border-white/[0.07] hover:border-purple-500/30 rounded-2xl px-5 py-4 transition-all animate-fade-in-up group"
                   style={{ animationDelay: `${i * 0.04}s` }}
                 >
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <p className="text-white font-semibold text-sm">{s.modeName}</p>
                     <p className="text-gray-600 text-xs mt-0.5">
                       {new Date(s.createdAt).toLocaleDateString('tr-TR')}
@@ -168,6 +179,13 @@ export default function Leaderboard() {
                     <p className="text-purple-400 font-black text-xl">{s.score}</p>
                     <p className="text-gray-600 text-xs">{s.correctAnswers}/{s.totalQuestions} doğru</p>
                   </div>
+                  <button
+                    onClick={() => handleDelete(s._id)}
+                    title="Skoru sil"
+                    className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 hover:bg-red-900/30 rounded-lg p-2 transition-all text-sm"
+                  >
+                    🗑️
+                  </button>
                 </div>
               ))
             )}

@@ -63,4 +63,36 @@ const getMyScores = async (req, res) => {
   }
 };
 
-module.exports = { saveScore, getLeaderboard, getMyScores };
+const deleteScore = async (req, res) => {
+  try {
+    const score = await Score.findById(req.params.id);
+    if (!score) return res.status(404).json({ error: 'Skor bulunamadı' });
+    if (String(score.user) !== String(req.user._id))
+      return res.status(403).json({ error: 'Bu skoru silme yetkin yok' });
+    await score.deleteOne();
+    res.json({ success: true, id: req.params.id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const updateScore = async (req, res) => {
+  try {
+    const { score: newScore } = req.body;
+    if (newScore === undefined || newScore < 0)
+      return res.status(400).json({ error: 'Geçerli bir skor girin' });
+
+    const score = await Score.findById(req.params.id);
+    if (!score) return res.status(404).json({ error: 'Skor bulunamadı' });
+    if (String(score.user) !== String(req.user._id))
+      return res.status(403).json({ error: 'Bu skoru düzenleme yetkin yok' });
+
+    score.score = newScore;
+    await score.save();
+    res.json(score);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { saveScore, getLeaderboard, getMyScores, deleteScore, updateScore };

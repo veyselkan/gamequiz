@@ -11,7 +11,22 @@ const recommendRouter = require('./routes/recommend');
 connectDB();
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    // origin yoksa (curl, mobile) ya da listede yoksa tüm origin'lere açık değil
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return cb(null, true);
+    }
+    cb(new Error('CORS engellendi'));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use('/api/games', gamesRouter);
@@ -22,8 +37,14 @@ app.use('/api/recommend', recommendRouter);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
+app.use((req, res) => res.status(404).json({ error: 'Endpoint bulunamadı' }));
+
 app.use((err, req, res, next) => {
-  res.status(500).json({ error: err.message });
+  console.error(err);
+  const isDev = process.env.NODE_ENV !== 'production';
+  res.status(err.status || 500).json({
+    error: isDev ? err.message : 'Sunucu hatası',
+  });
 });
 
 const PORT = process.env.PORT || 5000;
