@@ -45,11 +45,14 @@ export default function TriviaBalloon() {
     }
 
     clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setShowCard(false);
-      setTrivia(null);
-      setTimeout(() => setVisible(true), 400);
-    }, 10000);
+    timerRef.current = setTimeout(closeCard, 10000);
+  };
+
+  const closeCard = () => {
+    clearTimeout(timerRef.current);
+    setShowCard(false);
+    setTrivia(null);
+    setTimeout(() => setVisible(true), 400);
   };
 
   return (
@@ -97,17 +100,26 @@ export default function TriviaBalloon() {
             transition={{ duration: 0.25 }}
           >
             {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" onClick={closeCard} />
 
             {/* Card */}
             <motion.div
               key="card"
               className="relative glass border border-purple-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl shadow-purple-500/20"
+              onClick={e => e.stopPropagation()}
               initial={{ scale: 0.6, y: 50, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 26, delay: 0.1 }}
             >
+              {/* Close button */}
+              <button
+                onClick={closeCard}
+                className="absolute top-4 right-4 text-gray-600 hover:text-gray-300 text-xl leading-none transition-colors"
+              >
+                ×
+              </button>
+
               {trivia ? (
                 <>
                   <div className="text-center mb-5">
@@ -168,7 +180,7 @@ export default function TriviaBalloon() {
                   transition={{ duration: 10, ease: 'linear' }}
                 />
               </div>
-              <p className="text-gray-700 text-xs text-center mt-2">10 saniye sonra kaybolur</p>
+              <p className="text-gray-700 text-xs text-center mt-2">10 saniye sonra kaybolur · dışarı tıkla veya × ile kapat</p>
             </motion.div>
           </motion.div>
         )}

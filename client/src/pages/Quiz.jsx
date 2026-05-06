@@ -349,6 +349,7 @@ export default function Quiz() {
 
     setPhase('answered');
     setSelected(answer);
+    if (isCorrect && mode === '2') setPixelLevel(0);
 
     if (isCorrect) {
       const timeBonus = timeLeft * 5;
